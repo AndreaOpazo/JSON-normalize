@@ -5,8 +5,17 @@ export type Product = {
   thumbnail: string;
 }
 
+export type Author = {
+  id: string;
+  name: string;
+  surname: string;
+  age: number;
+  alias: string;
+  avatar: string;
+}
+
 export type Message = {
-  emailUser: string;
+  author: Author; 
   text: string;
   date: string;
 }

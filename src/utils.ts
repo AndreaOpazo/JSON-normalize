@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import { prodModel } from './models/products';
 import { msgModel } from './models/messages';
 import faker from 'faker';
+import { normalize } from 'normalizr';
+import { messageSchema } from './schemas';
 
 class Utils {
   static async connectToDb() {
@@ -58,13 +60,19 @@ class Utils {
 //Las funciones a continuacion, son para los messages
 export const getMessages = async () => {
   try {
-    return await msgModel.find();
+    const messages = await msgModel.find();
+    console.log(messages);
+    if (messages.length === 0) {
+      return messages;
+    }
+    console.log(normalize(messages, messageSchema));
+    return normalize(messages, messageSchema);
   } catch (error) {
     console.error(error);
   }
 };
 
-export const updateMessages = async (message: Message[]) => {
+export const updateMessages = async (message: Message) => {
   try {
     await msgModel.insertMany(message);
   } catch (error) {

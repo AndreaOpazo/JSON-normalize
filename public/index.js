@@ -36,8 +36,20 @@ socket.on("productList", (data) => {
 
 const formIsValid = () => {
   const emailUser = document.getElementById("email-user").value;
+  const nameUser = document.getElementById("name-user").value;
+  const surnameUser = document.getElementById("surname-user").value;
+  const ageUser = document.getElementById("age-user").value;
+  const aliasUser = document.getElementById("alias-user").value;
+  const avatarUser = document.getElementById("avatar-user").value;
   const text = document.getElementById("text").value;
-  return emailUser.trim() !== "" && text.trim() !== ""
+  const isValid = emailUser.trim() !== ""
+    && text.trim() !== ""
+    && nameUser.trim() !== ""
+    && surnameUser.trim() !== ""
+    && ageUser.trim() !== ""
+    && aliasUser.trim() !== ""
+    && avatarUser.trim() !== "";
+  return isValid;
 };
 
 document.querySelector("#submit").addEventListener("click", (e) => {
@@ -65,11 +77,18 @@ const getActualDate = () => {
 
 const sendMessage = () => {
   if (!formIsValid()) {
-    alert("Email y/o mensaje requerido");
+    alert("Todos los campos son requeridos.");
     return;
   }
-  socket.emit("new-message", { 
-    emailUser: document.getElementById("email-user").value,
+  socket.emit("new-message", {
+    author: {
+      email: document.getElementById("email-user").value,
+      name: document.getElementById("name-user").value,
+      surname: document.getElementById("surname-user").value,
+      age: document.getElementById("age-user").value,
+      alias: document.getElementById("alias-user").value,
+      avatar: document.getElementById("avatar-user").value,
+    },
     text: document.getElementById("text").value,
     date: getActualDate()
   });
@@ -91,4 +110,9 @@ socket.on("messageList", (data) => {
 const clearInputs = () => {
   document.getElementById("email-user").value = "";
   document.getElementById("text").value = "";
+  document.getElementById("name-user").value = "";
+  document.getElementById("surname-user").value = "";
+  document.getElementById("age-user").value = "";
+  document.getElementById("alias-user").value = "";
+  document.getElementById("avatar-user").value = "";
 };
