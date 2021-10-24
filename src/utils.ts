@@ -1,10 +1,9 @@
 import { Product, Message } from './types';
 import mongoose from 'mongoose';
 import { prodModel } from './models/products';
-import { msgModel } from './models/messages';
+import { msgModel } from './models/message';
 import faker from 'faker';
-import { normalize } from 'normalizr';
-import { messageSchema } from './schemas';
+import { normalize, schema } from 'normalizr';
 
 class Utils {
   static async connectToDb() {
@@ -60,19 +59,30 @@ class Utils {
 //Las funciones a continuacion, son para los messages
 export const getMessages = async () => {
   try {
-    const messages = await msgModel.find();
-    console.log(messages);
-    if (messages.length === 0) {
-      return messages;
+    const rawMessages = await msgModel.find();
+    if (rawMessages.length === 0) {
+      return rawMessages;
     }
-    console.log(normalize(messages, messageSchema));
-    return normalize(messages, messageSchema);
+
+    const messages = rawMessages.map(rawMsg => rawMsg.toObject());
+
+    const author = new schema.Entity('authors', {}, {
+      idAttribute: 'email'
+    });
+
+    const message = new schema.Entity('messages', { author }, {
+      idAttribute: '_id'
+    });
+    
+    const normalizedMessages = normalize(messages, [message]);
+    normalizedMessages.result = normalizedMessages.result.map((objectId: any) => objectId.toString());
+    return normalizedMessages;
   } catch (error) {
     console.error(error);
   }
 };
 
-export const updateMessages = async (message: Message) => {
+export const saveMessage = async (message: Message) => {
   try {
     await msgModel.insertMany(message);
   } catch (error) {

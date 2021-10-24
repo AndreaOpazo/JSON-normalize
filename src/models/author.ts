@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const authorCollection = 'author';
-export const authorsSchema = new mongoose.Schema({
+export const authorSchema = new mongoose.Schema({
   email: {
     type: String,
     require: true,
@@ -29,4 +29,4 @@ export const authorsSchema = new mongoose.Schema({
   }
 });
 
-export const authorModel = mongoose.model(authorCollection, authorsSchema);
+export const authorModel = mongoose.model(authorCollection, authorSchema);

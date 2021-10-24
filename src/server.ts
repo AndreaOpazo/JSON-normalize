@@ -3,7 +3,7 @@ import handlebars from "express-handlebars";
 import http from "http";
 import path from "path";
 import { Server }from "socket.io";
-import Utils, { getMessages, updateMessages, getProductsMock} from './utils';
+import Utils, { getMessages, saveMessage, getProductsMock} from './utils';
 
 const app = express();
 const router = express.Router();
@@ -38,16 +38,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', router);
 
-app.get("/", (_req: Request, res: Response) => {
-  res.sendFile("index.html", { root: path.join(__dirname, './public') });
-});
-
 ioServer.on("connection", async (socket) => {
   Utils.connectToDb();
   socket.emit("productList", await Utils.getAllProducts());
   socket.emit("messageList", await getMessages());
   socket.on("new-message", async (data) => {
-    await updateMessages(data);
+    await saveMessage(data);
     ioServer.sockets.emit("messageList", await getMessages());
   });
 });

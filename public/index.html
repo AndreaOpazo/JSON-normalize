@@ -12,7 +12,7 @@
   >
   <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.6.3/rxjs.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.1/dist/normalizr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/normalizr@3.6.1/dist/normalizr.browser.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="index.js" defer></script>
   <title>Formulario y Vista de Productos</title>
@@ -51,6 +51,7 @@
   <div class="row">
     <div class="col">
       <h2>Centro de mensajes</h2>
+      <h3 id="compression"></h3>
       <input type="email" id="email-user" placeholder="Email usuario" required />
       <input type="text" id="name-user" placeholder="Nombre" required/>
       <input type="text" id="surname-user" placeholder="Apellido" required/>

@@ -1,6 +1,11 @@
 import { schema } from "normalizr";
 
-const authorSchema = new schema.Entity('authors');
-export const messageSchema = new schema.Entity('messages', {
-  authorSchema
+const author = new schema.Entity('authors', undefined, { idAttribute: 'email' });
+
+export const message = new schema.Entity('messages', {
+  author: author
 });
+
+// export const messagesSchema = new schema.Entity('messages', {
+//   messages: [messageSchema]
+// });

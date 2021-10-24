@@ -95,11 +95,26 @@ const sendMessage = () => {
   return false;
 };
 
-socket.on("messageList", (data) => {
-  document.getElementById("msg-core").innerHTML = data
-    .map(({emailUser, text, date}) => `
+socket.on("messageList", (normalizedMessages) => {
+  const author = new normalizr.schema.Entity('authors', {}, {
+    idAttribute: 'email'
+  });
+
+  const message = new normalizr.schema.Entity('messages', { author }, {
+    idAttribute: '_id'
+  });
+
+  const normalizedMsgsLength = JSON.stringify(normalizedMessages).length;
+
+  const denormalizedMessages = normalizr.denormalize(normalizedMessages.result, [message], normalizedMessages.entities);
+  const denormalizedMsgsLength = JSON.stringify(denormalizedMessages).length;
+
+  document.getElementById("compression").innerHTML = `Compresion: ${Math.trunc((normalizedMsgsLength / denormalizedMsgsLength) * 100)}%`
+
+  document.getElementById("msg-core").innerHTML = denormalizedMessages
+    .map(({ author: { email }, text, date }) => `
       <div>
-        <b style="color: blue;">${emailUser}</b>
+        <b style="color: blue;">${email}</b>
         <span style="color: brown;">[${date}]<i style="color: green;"> : ${text}</i></span>
       </div>`
     )
